@@ -1,11 +1,6 @@
  package com.example.l1
 
-import android.content.Context
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -37,7 +32,6 @@ import com.example.l1.ui.theme.L1Theme
 import kotlin.random.Random
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.viewModelFactory
 
  class Labo1ViewModel : ViewModel() {
      var posiciones by mutableStateOf(true)

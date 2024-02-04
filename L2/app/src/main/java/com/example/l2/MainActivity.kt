@@ -1,8 +1,5 @@
 package com.example.l2
 
-import android.content.Context
-import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,7 +15,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
@@ -27,10 +23,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat.recreate
 import androidx.lifecycle.ViewModel
 import com.example.l2.ui.theme.L2Theme
 import java.util.Locale
@@ -151,7 +145,7 @@ fun Labo2(cambios: Int, contador: Map<AppLifecycleState, Int>, idioma: String, o
         }
         Row {
             for (language in AppLanguage.values()) {
-                if (language.code != idioma.toString()){
+                if (language.code != idioma){
                     Button(onClick = {
                         onLanguageChange(language.code)
                         // Cambia el idioma al pulsar el botón
