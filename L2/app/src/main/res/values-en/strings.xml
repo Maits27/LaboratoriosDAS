@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">L2</string>
+    <string name="contador_mensaje">There have been %1$d screen-rolls.</string>
+    <string name="estado_mensaje">%1$s happened %2$d times.</string>
+</resources>
