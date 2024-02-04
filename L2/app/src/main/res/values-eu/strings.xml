@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">L2</string>
+    <string name="contador_mensaje">%1$d biraketa egon dira.</string>
+    <string name="estado_mensaje">%1$s %2$d alditan gertatu da.</string>
+</resources>
