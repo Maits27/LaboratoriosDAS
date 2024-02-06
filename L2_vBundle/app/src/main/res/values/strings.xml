@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">L2_vBundle</string>
+    <string name="contador_mensaje">Ha habido %1$d cambios en la pantalla.</string>
+    <string name="estado_mensaje">%1$s ha sucedido %2$d veces.</string>
+</resources>
