@@ -38,6 +38,7 @@ enum class AppLanguage(val language: String, val code: String) {
 }
 enum class AppLifecycleState {
     OnStart,
+    OnSaveInstanceState,
     OnCreate,
     OnResume,
     OnPause,
@@ -46,7 +47,6 @@ enum class AppLifecycleState {
     OnRestart
 }
 class ViewModel2 : ViewModel() {
-    var cambios by mutableStateOf(0) // Delega los setters y getters a mutable state of
     val transitionedStates = mutableStateListOf<AppLifecycleState>()
     val transitionedStatesCounter = mutableStateMapOf<AppLifecycleState, Int>()
     var idioma by mutableStateOf("es")
@@ -69,7 +69,7 @@ class MainActivity : ComponentActivity() {
                     color = Color.White
                 ) {
                     Labo2(
-                        cambios = viewModel2.cambios,
+                        cambios = numeroDeGiros,
                         contador = viewModel2.transitionedStatesCounter,
                         idioma = viewModel2.idioma,
                         onLanguageChange = {
@@ -84,7 +84,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onPause() {
         super.onPause()
-        viewModel2.cambios++
         viewModel2.transitionedStatesCounter[AppLifecycleState.OnPause] =
             viewModel2.transitionedStatesCounter[AppLifecycleState.OnPause]?.plus(1) ?: 1
     }
@@ -119,14 +118,15 @@ class MainActivity : ComponentActivity() {
             viewModel2.transitionedStatesCounter[AppLifecycleState.OnResume]?.plus(1) ?: 1
     }
 
-
+    //TODO DIFERENTE:
     override fun onSaveInstanceState (savedInstanceState: Bundle) {
         // Llamamos a la función que heredamos
         super.onSaveInstanceState(savedInstanceState)
 
         // Actualizamos el número de giros
         savedInstanceState.putInt("numeroGiros", this.numeroDeGiros + 1)
-        val despuesGiros = savedInstanceState.getInt("numeroGiros")
+        viewModel2.transitionedStatesCounter[AppLifecycleState.OnSaveInstanceState] =
+            viewModel2.transitionedStatesCounter[AppLifecycleState.OnSaveInstanceState]?.plus(1) ?: 1
     }
 
     private fun camcambiarIdioma(codigo: String){
@@ -169,6 +169,7 @@ fun Labo2(cambios: Int, contador: Map<AppLifecycleState, Int>, idioma: String, o
                 }
             }
         }
+        //TODO: FALTARIA LA SEGUNDA ACTIVIDAD Y EL BOTON DE CAMBIO PERO SE QUEDA ASI
     }
 }
 
