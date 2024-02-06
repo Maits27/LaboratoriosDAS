@@ -3,4 +3,6 @@
     <string name="app_name">L2</string>
     <string name="contador_mensaje">There have been %1$d screen-rolls.</string>
     <string name="estado_mensaje">%1$s happened %2$d times.</string>
+    <string name="main_message">Change to second activity</string>
+    <string name="not_main_message">Change to main activity</string>
 </resources>

@@ -2,4 +2,6 @@
     <string name="app_name">L2</string>
     <string name="contador_mensaje">Ha habido %1$d cambios en la pantalla.</string>
     <string name="estado_mensaje">%1$s ha sucedido %2$d veces.</string>
+    <string name="main_message">Cambiar a segunda actividad</string>
+    <string name="not_main_message">Cambiar a actividad principal</string>
 </resources>

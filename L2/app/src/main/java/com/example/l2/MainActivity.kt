@@ -1,6 +1,8 @@
 package com.example.l2
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -23,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -51,11 +54,14 @@ class ViewModel2 : ViewModel() {
     var idioma by mutableStateOf("es")
 }
 
-class MainActivity : ComponentActivity() {
+
+class OtherActivity : ComponentActivity(){
     private val viewModel2 by viewModels<ViewModel2>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("Other activity","ESTAMOS EN EL OTHER")
+
         viewModel2.transitionedStatesCounter[AppLifecycleState.OnCreate] =
             viewModel2.transitionedStatesCounter[AppLifecycleState.OnCreate]?.plus(1) ?: 1
         setContent {
@@ -71,7 +77,90 @@ class MainActivity : ComponentActivity() {
                         onLanguageChange = {
                             viewModel2.idioma = it
                             camcambiarIdioma(viewModel2.idioma)
-                        }
+                        },
+                        onButtonPress = {
+                            // Abre la nueva actividad al pulsar el botón
+                            startActivity(Intent(this@OtherActivity, MainActivity::class.java))
+                        },
+                        main = false
+                    )
+                }
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel2.cambios++
+        viewModel2.transitionedStatesCounter[AppLifecycleState.OnPause] =
+            viewModel2.transitionedStatesCounter[AppLifecycleState.OnPause]?.plus(1) ?: 1
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel2.transitionedStatesCounter[AppLifecycleState.OnStart] =
+            viewModel2.transitionedStatesCounter[AppLifecycleState.OnStart]?.plus(1) ?: 1
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel2.transitionedStatesCounter[AppLifecycleState.OnDestroy] =
+            viewModel2.transitionedStatesCounter[AppLifecycleState.OnDestroy]?.plus(1) ?: 1
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel2.transitionedStatesCounter[AppLifecycleState.OnStop] =
+            viewModel2.transitionedStatesCounter[AppLifecycleState.OnStop]?.plus(1) ?: 1
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        viewModel2.transitionedStatesCounter[AppLifecycleState.OnRestart] =
+            viewModel2.transitionedStatesCounter[AppLifecycleState.OnRestart]?.plus(1) ?: 1
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel2.transitionedStatesCounter[AppLifecycleState.OnResume] =
+            viewModel2.transitionedStatesCounter[AppLifecycleState.OnResume]?.plus(1) ?: 1
+    }
+
+    private fun camcambiarIdioma(codigo: String){
+        resources.configuration.setLocale(Locale(codigo))
+        resources.updateConfiguration(resources.configuration, resources.displayMetrics)
+
+        resources.configuration.locale = Locale(codigo)
+        resources.updateConfiguration(resources.configuration, resources.displayMetrics)
+    }
+}
+class MainActivity : ComponentActivity() {
+    private val viewModel2 by viewModels<ViewModel2>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d("MainActivity","ESTAMOS EN EL MAIN")
+        viewModel2.transitionedStatesCounter[AppLifecycleState.OnCreate] =
+            viewModel2.transitionedStatesCounter[AppLifecycleState.OnCreate]?.plus(1) ?: 1
+        setContent {
+            L2Theme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = Color.White
+                ) {
+                    Labo2(
+                        cambios = viewModel2.cambios,
+                        contador = viewModel2.transitionedStatesCounter,
+                        idioma = viewModel2.idioma,
+                        onLanguageChange = {
+                            viewModel2.idioma = it
+                            camcambiarIdioma(viewModel2.idioma)
+                        },
+                        onButtonPress = {
+                            // Abre la nueva actividad al pulsar el botón
+                            startActivity(Intent(this@MainActivity, OtherActivity::class.java))
+                        },
+                        main = true
                     )
                 }
             }
@@ -125,8 +214,10 @@ class MainActivity : ComponentActivity() {
 
 }
 
+
+
 @Composable
-fun Labo2(cambios: Int, contador: Map<AppLifecycleState, Int>, idioma: String, onLanguageChange:(String)->Unit, modifier: Modifier = Modifier) {
+fun Labo2(cambios: Int, contador: Map<AppLifecycleState, Int>, idioma: String, onLanguageChange:(String)->Unit, main: Boolean, onButtonPress: () -> Unit) {
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -143,6 +234,7 @@ fun Labo2(cambios: Int, contador: Map<AppLifecycleState, Int>, idioma: String, o
                 Text(text = stringResource(R.string.estado_mensaje, state, contador[state]?:0), Modifier.padding(top = 5.dp, bottom = 5.dp))
             }
         }
+
         Row {
             for (language in AppLanguage.values()) {
                 if (language.code != idioma){
@@ -152,6 +244,22 @@ fun Labo2(cambios: Int, contador: Map<AppLifecycleState, Int>, idioma: String, o
                     }) {
                         Text(text = "$language")
                     }
+                }
+            }
+        }
+
+        Column {
+            if (main){
+                Button(onClick = {
+                    onButtonPress()
+                }) {
+                    Text(text = stringResource(id = R.string.main_message))
+                }
+            }else{
+                Button(onClick = {
+                    onButtonPress()
+                }) {
+                    Text(text = stringResource(id = R.string.not_main_message))
                 }
             }
         }
