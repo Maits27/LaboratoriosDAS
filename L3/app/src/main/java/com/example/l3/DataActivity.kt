@@ -1,5 +1,6 @@
 package com.example.l3
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
@@ -59,7 +60,11 @@ fun ItemWindow(activity: ComponentActivity, viewModel: AppViewModel,  modifier: 
                 .fillMaxWidth()
                 .padding(16.dp)
         )
-        Button(onClick = { viewModel.todoList.add(viewModel.nuevaTarea) }) {
+        Button(onClick = {
+            viewModel.todoList.add(viewModel.nuevaTarea)
+            val intent = Intent(activity, MainActivity::class.java)
+            activity.startActivity(intent)
+        }) {
             Text(text = stringResource(id = R.string.done))
         }
 
