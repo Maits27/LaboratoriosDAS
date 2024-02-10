@@ -39,15 +39,21 @@ class DataActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ItemWindow(this, viewModel = appViewModel)
+                    ItemWindow(::doneAdding, viewModel = appViewModel)
                 }
             }
         }
     }
+    fun doneAdding() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) //TODO???????????
+        this.startActivity(intent)
+        finish()
+    }
 }
 
 @Composable
-fun ItemWindow(activity: ComponentActivity, viewModel: AppViewModel,  modifier: Modifier = Modifier) {
+fun ItemWindow(doneAdding: () -> Unit, viewModel: AppViewModel,  modifier: Modifier = Modifier) {
     Column (Modifier.wrapContentSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -62,8 +68,7 @@ fun ItemWindow(activity: ComponentActivity, viewModel: AppViewModel,  modifier: 
         )
         Button(onClick = {
             viewModel.todoList.add(viewModel.nuevaTarea)
-            val intent = Intent(activity, MainActivity::class.java)
-            activity.startActivity(intent)
+            doneAdding()
         }) {
             Text(text = stringResource(id = R.string.done))
         }

@@ -6,11 +6,16 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -24,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.example.l3.ui.theme.L3Theme
 import java.util.Locale
@@ -37,7 +43,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("MainActivity", "Me creo")
         setContent {
             L3Theme {
                 // A surface container using the 'background' color from the theme
@@ -64,33 +69,31 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun TodoList(activity: ComponentActivity, viewModel: AppViewModel, modifier: Modifier = Modifier) {
+    val tareas = viewModel.todoList
     Column (Modifier.wrapContentSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier.fillMaxWidth()
+        ) {
+            for (tarea in tareas) {
+                item {
+                    Text(text = tarea, modifier = Modifier.fillMaxWidth())
+                }
+            }
+        }
         Button(onClick = {
-            Log.d("Button", "Dataaa")
             val intent = Intent(activity, DataActivity::class.java)
             activity.startActivity(intent)
-            Log.d("MainActivity", "Dataaa")
         }) {
             Text(text = stringResource(id = R.string.add_task))
         }
+
     }
-    LazyColumn (
-        Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Log.d("MainActivity", "Lazy")
-        items(viewModel.todoList.size) { index ->
-            val todo = viewModel.todoList[index]
-            Button(onClick = { /* Handle button click if needed */ }) {
-                Text(text = todo)
-            }
-        }
-        Log.d("MainActivity", "TodoOk")
-    }
+
+
 }
 
 @Preview(showBackground = true)
