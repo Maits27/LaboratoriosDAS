@@ -5,4 +5,6 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="add_task">Add a task</string>
     <string name="done">Done</string>
+    <string name="welcome">Welcome to your TODO list</string>
+    <string name="eraseElement">To remove an item, hold it down: </string>
 </resources>
