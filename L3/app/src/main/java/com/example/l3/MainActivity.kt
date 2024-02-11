@@ -126,18 +126,12 @@ fun TodoList(activity: ComponentActivity, viewModel: AppViewModel, modifier: Mod
                     verticalArrangement = Arrangement.Center,
                     modifier = modifier.wrapContentSize()
                 ){
-//                    Row(
-//                        modifier = Modifier
-//                            .wrapContentSize()
-//                            .border(width = 2.dp, color = Color.Black)
-//                    ) {
-//                        Box(modifier = modifier){ Text(text = it.id.toString())}
-//                        Box(modifier = modifier){ Text(text = it.todo) }
-//                    }
+
                     Divider(color = Color.LightGray)
                     Text(
                         text = it,
                         modifier = modifier
+                            .fillMaxWidth()
                             .combinedClickable(
                                 onClick = {
                                     // Regular
@@ -153,11 +147,7 @@ fun TodoList(activity: ComponentActivity, viewModel: AppViewModel, modifier: Mod
 
                 }
             }
-//            for (tarea in tareas) {
-//                item {
-//                    Text(text = tarea, modifier = Modifier.wrapContentSize().padding(16.dp))
-//                }
-//            }
+
         }
         Divider(color = Color.White, thickness = 4.dp)
         Button(
