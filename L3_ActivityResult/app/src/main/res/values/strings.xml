@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">L3_ActivityResult</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="add_task">Add a task</string>
+    <string name="done">Done</string>
+    <string name="welcome">Welcome to your TODO list</string>
+    <string name="eraseElement">To remove an item, hold it down: </string>
+</resources>

@@ -1,4 +1,4 @@
-package com.example.l3
+package com.example.l3_activityresult
 
 import android.content.Intent
 import android.os.Bundle
@@ -15,35 +15,30 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.l3.ui.theme.L3Theme
-import java.util.Locale
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.sp
-
-
+import com.example.l3_activityresult.ui.theme.L3_ActivityResultTheme
+import androidx.compose.foundation.lazy.items
 class MainActivity : ComponentActivity() {
     val appViewModel by viewModels<AppViewModel>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val todoList = intent.extras?.getStringArrayList("todoList")?: appViewModel.todoList
         appViewModel.todoList = todoList
         setContent {
-            L3Theme {
+            L3_ActivityResultTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -57,16 +52,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-    private fun cambiarIdioma(codigo: String){
-        resources.configuration.setLocale(Locale(codigo))
-        resources.updateConfiguration(resources.configuration, resources.displayMetrics)
-
-        resources.configuration.locale = Locale(codigo)
-        resources.updateConfiguration(resources.configuration, resources.displayMetrics)
-    }
-
 }
-
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -140,7 +126,7 @@ fun TodoList(activity: ComponentActivity, viewModel: AppViewModel, modifier: Mod
         Divider(color = Color.White, thickness = 4.dp)
         Button(
             onClick = {
-                val intent = Intent(activity, DataActivity::class.java)
+                val intent = Intent(activity, MainActivity2::class.java)
                 intent.putExtra("todoList", viewModel.todoList)
                 activity.startActivity(intent)
             },
@@ -150,30 +136,5 @@ fun TodoList(activity: ComponentActivity, viewModel: AppViewModel, modifier: Mod
         }
 
     }
-
-//    LazyColumn (
-//        Modifier.fillMaxSize(),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
-//    ) {
-//        Log.d("MainActivity", "Lazy")
-//        items(viewModel.todoList.size) { index ->
-//            val todo = viewModel.todoList[index]
-//            // Utiliza combinedClickable para detectar pulsaciones largas
-//            Button(
-//                onClick = {}
-//            ) {
-//                Text(text = todo)
-//            }
-//        }
-//        Log.d("MainActivity", "TodoOk")
-//    }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun AppPreview2() {
-    L3Theme {
-        TodoList(activity = ComponentActivity(), viewModel = AppViewModel())
-    }
-}

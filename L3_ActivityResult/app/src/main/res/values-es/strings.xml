@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">L3_ActivityResult</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="add_task">Añade una tarea</string>
+    <string name="done">Hecho</string>
+    <string name="welcome">Bienvenid@ a tu lista TODO</string>
+    <string name="eraseElement">Para eliminar un TODO mantenga pulsado el elemento a borrar: </string>
+</resources>
