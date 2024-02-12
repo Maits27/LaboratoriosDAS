@@ -40,8 +40,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val todoList = intent.extras?.getStringArrayList("todoList")?: appViewModel.todoList
-        appViewModel.todoList = todoList
+
+        val newTask = intent.extras?.getString("newTask")?: ""
+        appViewModel.addTask(newTask)
+
         setContent {
             L3Theme {
                 // A surface container using the 'background' color from the theme
@@ -57,6 +59,7 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
     private fun cambiarIdioma(codigo: String){
         resources.configuration.setLocale(Locale(codigo))
         resources.updateConfiguration(resources.configuration, resources.displayMetrics)
@@ -106,13 +109,13 @@ fun TodoList(activity: ComponentActivity, viewModel: AppViewModel, modifier: Mod
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = modifier.wrapContentSize()
+            modifier = modifier.fillMaxWidth()
         ) {
             items(viewModel.todoList){
                 Column (
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
-                    modifier = modifier.wrapContentSize()
+                    modifier = modifier.fillMaxSize()
                 ){
 
                     Divider(color = Color.LightGray)
@@ -125,8 +128,7 @@ fun TodoList(activity: ComponentActivity, viewModel: AppViewModel, modifier: Mod
                                     // Regular
                                 },
                                 onLongClick = {
-                                    viewModel.todoList.remove(it)
-                                    viewModel.triggerRefresh()
+                                    viewModel.removeTask(it)
                                 })
                             .padding(16.dp)
                             .align(alignment = Alignment.CenterHorizontally),
@@ -141,7 +143,6 @@ fun TodoList(activity: ComponentActivity, viewModel: AppViewModel, modifier: Mod
         Button(
             onClick = {
                 val intent = Intent(activity, DataActivity::class.java)
-                intent.putExtra("todoList", viewModel.todoList)
                 activity.startActivity(intent)
             },
             Modifier.padding(25.dp)
@@ -151,23 +152,6 @@ fun TodoList(activity: ComponentActivity, viewModel: AppViewModel, modifier: Mod
 
     }
 
-//    LazyColumn (
-//        Modifier.fillMaxSize(),
-//        horizontalAlignment = Alignment.CenterHorizontally,
-//        verticalArrangement = Arrangement.Center
-//    ) {
-//        Log.d("MainActivity", "Lazy")
-//        items(viewModel.todoList.size) { index ->
-//            val todo = viewModel.todoList[index]
-//            // Utiliza combinedClickable para detectar pulsaciones largas
-//            Button(
-//                onClick = {}
-//            ) {
-//                Text(text = todo)
-//            }
-//        }
-//        Log.d("MainActivity", "TodoOk")
-//    }
 }
 
 @Preview(showBackground = true)

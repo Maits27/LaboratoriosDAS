@@ -1,9 +1,12 @@
 package com.example.l3_activityresult
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -15,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -30,13 +34,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.l3_activityresult.ui.theme.L3_ActivityResultTheme
-import androidx.compose.foundation.lazy.items
+
 class MainActivity : ComponentActivity() {
     val appViewModel by viewModels<AppViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val todoList = intent.extras?.getStringArrayList("todoList")?: appViewModel.todoList
-        appViewModel.todoList = todoList
         setContent {
             L3_ActivityResultTheme {
                 // A surface container using the 'background' color from the theme
@@ -45,19 +47,32 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     TodoList(
-                        this,
+                        ::pasarActividad2,
                         viewModel = appViewModel
                     )
                 }
             }
         }
     }
+    fun pasarActividad2(){
+        val intent = Intent(this, MainActivity2::class.java)
+        startActivityForResult.launch(intent)
+    }
+    val startActivityForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK){
+            val intent = result.data
+            val newTask = intent?.extras?.getString("newTask")?: ""
+            appViewModel.addTask(newTask)
+        }
+    }
 }
+
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TodoList(activity: ComponentActivity, viewModel: AppViewModel, modifier: Modifier = Modifier) {
+fun TodoList(pasarActividad2: ()->Unit, viewModel: AppViewModel, modifier: Modifier = Modifier) {
     val forceRefresh by viewModel.forceRefresh.collectAsState()
 
     // Actualiza la lista cuando forceRefresh cambia
@@ -111,8 +126,7 @@ fun TodoList(activity: ComponentActivity, viewModel: AppViewModel, modifier: Mod
                                     // Regular
                                 },
                                 onLongClick = {
-                                    viewModel.todoList.remove(it)
-                                    viewModel.triggerRefresh()
+                                    viewModel.removeTask(it)
                                 })
                             .padding(16.dp)
                             .align(alignment = Alignment.CenterHorizontally),
@@ -126,9 +140,7 @@ fun TodoList(activity: ComponentActivity, viewModel: AppViewModel, modifier: Mod
         Divider(color = Color.White, thickness = 4.dp)
         Button(
             onClick = {
-                val intent = Intent(activity, MainActivity2::class.java)
-                intent.putExtra("todoList", viewModel.todoList)
-                activity.startActivity(intent)
+                pasarActividad2()
             },
             Modifier.padding(25.dp)
         ) {
@@ -137,4 +149,3 @@ fun TodoList(activity: ComponentActivity, viewModel: AppViewModel, modifier: Mod
 
     }
 }
-

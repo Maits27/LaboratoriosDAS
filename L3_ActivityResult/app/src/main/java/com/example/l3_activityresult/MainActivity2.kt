@@ -44,17 +44,16 @@ class MainActivity2 : ComponentActivity() {
             }
         }
     }
-    fun doneAdding(todoList: ArrayList<String>) {
+    fun doneAdding(newTask: String) {
         val intent = Intent(this, MainActivity::class.java)
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP) //TODO???????????
-        intent.putExtra("todoList", todoList)
-        this.startActivity(intent)
+        intent.putExtra("newTask", newTask)
+        setResult(RESULT_OK, intent)
         finish()
     }
 }
 
 @Composable
-fun ItemWindow(doneAdding: KFunction1<ArrayList<String>, Unit>, todoList: ArrayList<String>, modifier: Modifier = Modifier) {
+fun ItemWindow(doneAdding: KFunction1<String, Unit>, todoList: ArrayList<String>, modifier: Modifier = Modifier) {
     var nuevaTarea by remember { mutableStateOf("") }
     Column (Modifier.wrapContentSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -69,10 +68,7 @@ fun ItemWindow(doneAdding: KFunction1<ArrayList<String>, Unit>, todoList: ArrayL
                 .padding(16.dp)
         )
         Button(onClick = {
-            if (!nuevaTarea.equals("")){
-                todoList.add(nuevaTarea)
-            }
-            doneAdding(todoList)
+            doneAdding(nuevaTarea)
         }) {
             Text(text = stringResource(id = R.string.done))
         }
