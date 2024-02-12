@@ -10,21 +10,33 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
+/////////////MIO/////////////
+
+private val CustomButtonColor = Color(0xFFB953C1) // Cambia este valor al color que desees
+
+/////////////MIO/////////////
+
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
+    onPrimary = Color.White,
     secondary = PurpleGrey80,
-    tertiary = Pink80
+    tertiary = Pink80,
+    background = Color.DarkGray
 )
+
 
 private val LightColorScheme = lightColorScheme(
     primary = Purple40,
+    onPrimary = Color.Black,
     secondary = PurpleGrey40,
-    tertiary = Pink40
+    tertiary = Pink40,
+    background = Color.LightGray
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -36,6 +48,7 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF1C1B1F),
     */
 )
+
 
 @Composable
 fun L3Theme(
@@ -59,6 +72,7 @@ fun L3Theme(
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            window.attributes.buttonBrightness.inc()
         }
     }
 

@@ -58,27 +58,29 @@ class DataActivity : ComponentActivity() {
 @Composable
 fun ItemWindow(doneAdding: KFunction1<ArrayList<String>, Unit>, todoList: ArrayList<String>, modifier: Modifier = Modifier) {
     var nuevaTarea by remember { mutableStateOf("") }
-    Column (Modifier.wrapContentSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        TextField(
-            value = nuevaTarea,
-            onValueChange = {nuevaTarea = it},
-            label = { Text(text = "Nuevo TODO")},
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        )
-        Button(onClick = {
-            if (!nuevaTarea.equals("")){
-                todoList.add(nuevaTarea)
+    L3Theme {
+        Column (Modifier.wrapContentSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            TextField(
+                value = nuevaTarea,
+                onValueChange = {nuevaTarea = it},
+                label = { Text(text = "Nuevo TODO")},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+            Button(onClick = {
+                if (!nuevaTarea.equals("")){
+                    todoList.add(nuevaTarea)
+                }
+                doneAdding(todoList)
+            }) {
+                Text(text = stringResource(id = R.string.done))
             }
-            doneAdding(todoList)
-        }) {
-            Text(text = stringResource(id = R.string.done))
-        }
 
+        }
     }
 }
 
