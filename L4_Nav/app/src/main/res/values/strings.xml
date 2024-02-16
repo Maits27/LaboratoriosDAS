@@ -2,16 +2,21 @@
     <string name="app_name">L4_Nav</string>
     <string name="title">LOS NÚMEROS MUERTOS</string>
     <string name="jugar">Jugar</string>
+    <string name="volver">Volver</string>
     <string name="done">Cerrar</string>
+    <string name="nivel">Nivel: </string>
+    <string name="adivinar">Adivinar:</string>
+
+    <string name="intentos">Te quedan %1$d intentos</string>
+    <string name="introduceNum">Introduce un número de %1$d dígitos: </string>
+    <string name="ejNum">%1$s</string>
 
     <string name="instrucciones">Instrucciones</string>
     <string name="instruccionesCompletas">
         La mecánica del juego de Los Números Muertos es muy sencilla. El jugador 1 piensa un número, el jugador
-2 tiene que intentar adivinarlo.
-
-Cada vez que el jugador 2 dice un número, el jugador 1 le dirá cuántos números muertos y cuántos
+2 tiene que intentar adivinarlo.\n\n Cada vez que el jugador 2 dice un número, el jugador 1 le dirá cuántos números muertos y cuántos
 heridos hay en la cifra que ha dado. Un número muerto es aquel dígito que está en la misma posición que
-en el número a adivinar. Un número herido es aquel dígito que aparece en el número a adivinar, pero está
+en el número a adivinar.\n\n Un número herido es aquel dígito que aparece en el número a adivinar, pero está
 en una posición distinta.
     </string>
 
@@ -20,4 +25,7 @@ en una posición distinta.
     <string name="medio">Medio</string>
     <string name="dificil">Difícil</string>
     <string name="title_activity_main2">MainActivity2</string>
+
+    <string name="intentosAnteriores">Intentos anteriores: </string>
+    <string name="intentoX">%1$d: %2$d muertos y %3$d heridos</string>
 </resources>
