@@ -20,9 +20,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.l4_nav.AppViewModel
 import com.example.l4_nav.R
+import com.example.l4_nav.navigation.AppScreens
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -90,17 +93,25 @@ fun GameBodyContent(navController: NavController, appViewModel: AppViewModel){
 
 
             Button(onClick = {
-                comprobacionIncorrecta = enviarIntento(
-                    textoIngresado.toInt(),
-                    appViewModel
-                )
-                if (!comprobacionIncorrecta){
-                    cambio = !cambio
+                if (!textoIngresado.isBlank()){
+                    comprobacionIncorrecta = enviarIntento(
+                        textoIngresado.toInt(),
+                        appViewModel
+                    )
+                    if (!comprobacionIncorrecta){
+                        cambio = !cambio
+                    }
+                }else{
+                    comprobacionIncorrecta = true
                 }
             }) {
                 Text(stringResource(id = R.string.adivinar))
             }
-
+            if(appViewModel.perdedor){
+                var ultimo = appViewModel.ultimoIntento
+                ToastMessage(message = stringResource(id = R.string.perdedor, ultimo[1], ultimo[2]))
+                navController.navigateUp()
+            }
 
             MensajeIncorrecto(
                 show = comprobacionIncorrecta,
@@ -108,11 +119,6 @@ fun GameBodyContent(navController: NavController, appViewModel: AppViewModel){
                 appViewModel.nivel+4
             )
 
-            if(appViewModel.perdedor){
-                var ultimo = appViewModel.ultimoIntento
-                ToastMessage(message = stringResource(id = R.string.perdedor, ultimo[1], ultimo[2], ultimo[0]))
-            
-            }
         }
 
     }
@@ -190,7 +196,10 @@ fun MensajeIncorrecto(show: Boolean, onConfirm: () ->Unit, cantidad: Int){
 
 @Composable
 fun ToastMessage(message: String) {
-    Toast.makeText(LocalContext.current, message, Toast.LENGTH_SHORT).show()
+    var toast = Toast.makeText(LocalContext.current, message, Toast.LENGTH_LONG)
+    toast.setMargin(160f, 160f)
+    toast.setGravity(160, 100, 100)
+    toast.show()
 }
 
 

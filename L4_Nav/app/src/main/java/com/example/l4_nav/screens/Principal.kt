@@ -58,6 +58,7 @@ fun BodyContent(navController: NavController, appViewModel: AppViewModel){
         )
         Button(
             onClick = {
+                appViewModel.reiniciar()
                 goToGame = true
             },
             Modifier.padding(10.dp)

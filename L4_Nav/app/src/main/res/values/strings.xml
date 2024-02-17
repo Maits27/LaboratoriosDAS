@@ -30,7 +30,5 @@ en una posición distinta.
     <string name="numIncorrecto">Has añadido un número incorrecto.</string>
 
     <string name="ganador">ENORABUENA! HAS GANADO</string>
-    <string name="perdedor">Oooh... Has perdido!\n\n
-        %1$d muertos y %2$d heridos
-        \n\nEl número correcto era: %3$d</string>
+    <string name="perdedor">%1$d muertos y %2$d heridos. Perdiste!</string>
 </resources>

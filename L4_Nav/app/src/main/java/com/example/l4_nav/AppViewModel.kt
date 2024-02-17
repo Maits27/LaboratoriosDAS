@@ -90,19 +90,19 @@ class AppViewModel : ViewModel() {
             intentoConsumido()
             if (intentos==0){
                 perdedor = true
-                reiniciar()
             }
         }
         return false
     }
 
-    private fun reiniciar(){
+    fun reiniciar(){
         for (i in 0 until listaIntentos.size){
             listaIntentos.removeFirst()
-            nivel = 0
-            numero = 0
-            ejNum = ' '.toString()
         }
+        nivel = 0
+        numero = 0
+        ejNum = ' '.toString()
+        perdedor=false
     }
 }
 
