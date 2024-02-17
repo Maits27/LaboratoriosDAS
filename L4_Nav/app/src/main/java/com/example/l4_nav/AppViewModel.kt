@@ -22,6 +22,12 @@ class AppViewModel : ViewModel() {
 
     var ejNum by mutableStateOf(' '.toString())
 
+    var perdedor by mutableStateOf(false)
+        private set
+
+    var ultimoIntento: MutableList<Int> = mutableListOf()
+    private set
+
     fun setNivelSeleccionado(nivelSeleccionado: Int){
         if (nivelSeleccionado > 2) {
             nivel = 0
@@ -54,6 +60,7 @@ class AppViewModel : ViewModel() {
 
     private fun sumarIntento(numero: Int, muertos: Int, heridos: Int){
         listaIntentos.add(listOf(numero, muertos, heridos))
+        ultimoIntento = listOf(numero, muertos, heridos).toMutableList()
     }
 
     fun comprobarNumero(numeroInsertado: Int): Boolean{
@@ -81,7 +88,22 @@ class AppViewModel : ViewModel() {
             }
             sumarIntento(numeroInsertado, muertos, heridos)
             intentoConsumido()
+            if (intentos==0){
+                perdedor = true
+                reiniciar()
+            }
         }
         return false
     }
+
+    private fun reiniciar(){
+        for (i in 0 until listaIntentos.size){
+            listaIntentos.removeFirst()
+            nivel = 0
+            numero = 0
+            ejNum = ' '.toString()
+        }
+    }
 }
+
+

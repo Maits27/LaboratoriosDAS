@@ -1,6 +1,7 @@
 package com.example.l4_nav.screens
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.ImeAction
@@ -51,9 +53,11 @@ fun PantallaJuego(navController: NavController, appViewModel: AppViewModel){
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun GameBodyContent(navController: NavController, appViewModel: AppViewModel){
+
     var comprobacionIncorrecta by remember { mutableStateOf(false) }
     var cambio by remember { mutableStateOf(false) }
     var textoIngresado by remember { mutableStateOf("") }
+
     Scaffold (
         topBar = { ParteArriba(appViewModel) },
         bottomBar = { ParteAbajo(appViewModel, cambio) }
@@ -65,6 +69,8 @@ fun GameBodyContent(navController: NavController, appViewModel: AppViewModel){
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
+
             Text(text = stringResource(id = R.string.introduceNum, (appViewModel.nivel+4)))
             OutlinedTextField(
                 value = textoIngresado,
@@ -81,7 +87,8 @@ fun GameBodyContent(navController: NavController, appViewModel: AppViewModel){
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
             )
-            // Botón para guardar
+
+
             Button(onClick = {
                 comprobacionIncorrecta = enviarIntento(
                     textoIngresado.toInt(),
@@ -93,35 +100,25 @@ fun GameBodyContent(navController: NavController, appViewModel: AppViewModel){
             }) {
                 Text(stringResource(id = R.string.adivinar))
             }
+
+
             MensajeIncorrecto(
                 show = comprobacionIncorrecta,
                 onConfirm = { comprobacionIncorrecta = false },
                 appViewModel.nivel+4
             )
 
+            if(appViewModel.perdedor){
+                var ultimo = appViewModel.ultimoIntento
+                ToastMessage(message = stringResource(id = R.string.perdedor, ultimo[1], ultimo[2], ultimo[0]))
+            
+            }
         }
 
     }
 }
 
-@Composable
-fun MensajeIncorrecto(show: Boolean, onConfirm: () ->Unit, cantidad: Int){
-    if(show){
-        AlertDialog(
-            onDismissRequest = {},
-            confirmButton = { TextButton(onClick = { onConfirm() }) {
-                Text(text = stringResource(id = R.string.done))
-            }
-            },
-            title = {Text(text = stringResource(id = R.string.numIncorrecto))},
-            text = { Text(text = stringResource(id = R.string.introduceNum, cantidad)) },
-        )
-    }
-}
 
-fun enviarIntento(numero: Int, appViewModel: AppViewModel): Boolean {
-    return appViewModel.comprobarNumero(numero)
-}
 @Composable
 fun ParteArriba(appViewModel: AppViewModel){
     Column (
@@ -142,10 +139,10 @@ fun ParteArriba(appViewModel: AppViewModel){
         Text(text = stringResource(id = R.string.intentos, appViewModel.intentos))
     }
 }
+
+
 @Composable
 fun ParteAbajo(appViewModel: AppViewModel, cambio: Boolean) {
-    //TODO NO ACTUALIZA
-
     Column(
         Modifier
             .padding(16.dp),
@@ -174,3 +171,29 @@ fun ParteAbajo(appViewModel: AppViewModel, cambio: Boolean) {
     }
 }
 
+
+@Composable
+fun MensajeIncorrecto(show: Boolean, onConfirm: () ->Unit, cantidad: Int){
+    if(show){
+        AlertDialog(
+            onDismissRequest = {},
+            confirmButton = { TextButton(onClick = { onConfirm() }) {
+                Text(text = stringResource(id = R.string.done))
+            }
+            },
+            title = {Text(text = stringResource(id = R.string.numIncorrecto))},
+            text = { Text(text = stringResource(id = R.string.introduceNum, cantidad)) },
+        )
+    }
+}
+
+
+@Composable
+fun ToastMessage(message: String) {
+    Toast.makeText(LocalContext.current, message, Toast.LENGTH_SHORT).show()
+}
+
+
+fun enviarIntento(numero: Int, appViewModel: AppViewModel): Boolean {
+    return appViewModel.comprobarNumero(numero)
+}
