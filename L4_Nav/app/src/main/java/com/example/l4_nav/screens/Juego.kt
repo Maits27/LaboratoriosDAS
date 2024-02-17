@@ -8,12 +8,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +50,7 @@ fun PantallaJuego(navController: NavController, appViewModel: AppViewModel){
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun GameBodyContent(navController: NavController, appViewModel: AppViewModel){
+    var comprobacionIncorrecta by remember { mutableStateOf(false) }
     var textoIngresado by remember { mutableStateOf("") }
     Scaffold (
         topBar = { ParteArriba(appViewModel) },
@@ -74,19 +79,41 @@ fun GameBodyContent(navController: NavController, appViewModel: AppViewModel){
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
             )
-
             // Botón para guardar
             Button(onClick = {
-                enviarIntento(textoIngresado)
+                comprobacionIncorrecta = enviarIntento(
+                    textoIngresado.toInt(),
+                    appViewModel
+                )
             }) {
                 Text(stringResource(id = R.string.adivinar))
             }
+            MensajeIncorrecto(
+                show = comprobacionIncorrecta,
+                onConfirm = { comprobacionIncorrecta = false },
+                appViewModel.nivel+4
+            )
         }
     }
 }
 
-fun enviarIntento(numero: String){
-    //TODO
+@Composable
+fun MensajeIncorrecto(show: Boolean, onConfirm: () ->Unit, cantidad: Int){
+    if(show){
+        AlertDialog(
+            onDismissRequest = {},
+            confirmButton = { TextButton(onClick = { onConfirm() }) {
+                Text(text = stringResource(id = R.string.done))
+            }
+            },
+            title = {Text(text = stringResource(id = R.string.numIncorrecto))},
+            text = { Text(text = stringResource(id = R.string.introduceNum, cantidad)) },
+        )
+    }
+}
+
+fun enviarIntento(numero: Int, appViewModel: AppViewModel): Boolean {
+    return appViewModel.comprobarNumero(numero)
 }
 @Composable
 fun ParteArriba(appViewModel: AppViewModel){
@@ -108,21 +135,23 @@ fun ParteArriba(appViewModel: AppViewModel){
         Text(text = stringResource(id = R.string.intentos, appViewModel.intentos))
     }
 }
-
 @Composable
-fun ParteAbajo(appViewModel: AppViewModel){
-    Column (
-        Modifier.padding(16.dp),
+fun ParteAbajo(appViewModel: AppViewModel) {
+    //TODO NO ACTUALIZA
+    Column(
+        Modifier
+            .padding(16.dp)
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         Text(text = stringResource(id = R.string.intentosAnteriores))
         Divider()
-        val intentos = appViewModel.listaIntentos
-        for (intento in intentos){
-            Text(text = stringResource(id = R.string.intentoX, intento[0], intento[1], intento[2]))
+        LazyColumn {
+            items(appViewModel.listaIntentos) { intento ->
+                Text(text = stringResource(id = R.string.intentoX, intento[0], intento[1], intento[2]))
+            }
         }
     }
 }
-
 

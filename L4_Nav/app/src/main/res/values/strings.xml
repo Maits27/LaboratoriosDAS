@@ -8,8 +8,9 @@
     <string name="adivinar">Adivinar:</string>
 
     <string name="intentos">Te quedan %1$d intentos</string>
-    <string name="introduceNum">Introduce un número de %1$d dígitos: </string>
+    <string name="introduceNum">Introduce un número de %1$d dígitos </string>
     <string name="ejNum">%1$s</string>
+    <string name="numIncorrecto">Has añadido un número incorrecto.</string>
 
     <string name="instrucciones">Instrucciones</string>
     <string name="instruccionesCompletas">

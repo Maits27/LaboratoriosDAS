@@ -32,10 +32,10 @@ class AppViewModel : ViewModel() {
             intentos = (nivelSeleccionado + 1) * 10
             numero = generarNumeroAleatorio(4+nivelSeleccionado)
             ejNum = ' '.toString()
-            for (i in 1 until (4+nivelSeleccionado)){
+            for (i in 0 until (4+nivelSeleccionado)){
                 ejNum = ejNum + i.toString()
             }
-
+            listaIntentos.add(listOf(0,0,0))
         }
     }
     private fun generarNumeroAleatorio(x: Int): Int {
@@ -48,15 +48,41 @@ class AppViewModel : ViewModel() {
         return random.nextInt(max - min + 1) + min
     }
 
-    fun intentoConsumido(){
+    private fun intentoConsumido(){
         intentos--
+        listaIntentos.add(listOf(0,0,0))
     }
 
-    fun sumarIntento(numero: Int, muertos: Int, heridos: Int){
+    private fun sumarIntento(numero: Int, muertos: Int, heridos: Int){
         listaIntentos.add(listOf(numero, muertos, heridos))
     }
 
-    fun comprobarNumero(numero: Int){
-        //TODO
+    fun comprobarNumero(numeroInsertado: Int): Boolean{
+        var heridos = 0
+        var muertos = 0
+
+        var numerosQueHay = mutableListOf<String>()
+        for (n in numero.toString()){
+            numerosQueHay.add(n.toString())
+        }
+
+        val numeroS = numeroInsertado.toString()
+
+        if (numeroS.length!=4+nivel){
+            return true
+        }else{
+            for (i in 0..3+nivel){
+                if (numeroS[i].toString() == numerosQueHay[i]){
+                    muertos++
+                }else{
+                    if (numeroS[i].toString() in numerosQueHay){
+                        heridos++
+                    }
+                }
+            }
+            sumarIntento(numeroInsertado, muertos, heridos)
+            intentoConsumido()
+        }
+        return false
     }
 }
