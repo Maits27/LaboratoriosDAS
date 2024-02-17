@@ -19,6 +19,7 @@ class AppViewModel : ViewModel() {
 
     var listaIntentos: MutableList<List<Int>> = mutableListOf()
         private set
+
     var ejNum by mutableStateOf(' '.toString())
 
     fun setNivelSeleccionado(nivelSeleccionado: Int){
@@ -35,7 +36,6 @@ class AppViewModel : ViewModel() {
             for (i in 0 until (4+nivelSeleccionado)){
                 ejNum = ejNum + i.toString()
             }
-            listaIntentos.add(listOf(0,0,0))
         }
     }
     private fun generarNumeroAleatorio(x: Int): Int {
@@ -50,7 +50,6 @@ class AppViewModel : ViewModel() {
 
     private fun intentoConsumido(){
         intentos--
-        listaIntentos.add(listOf(0,0,0))
     }
 
     private fun sumarIntento(numero: Int, muertos: Int, heridos: Int){

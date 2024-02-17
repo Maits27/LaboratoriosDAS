@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.ImeAction
@@ -51,10 +52,11 @@ fun PantallaJuego(navController: NavController, appViewModel: AppViewModel){
 @Composable
 fun GameBodyContent(navController: NavController, appViewModel: AppViewModel){
     var comprobacionIncorrecta by remember { mutableStateOf(false) }
+    var cambio by remember { mutableStateOf(false) }
     var textoIngresado by remember { mutableStateOf("") }
     Scaffold (
         topBar = { ParteArriba(appViewModel) },
-        bottomBar = { ParteAbajo(appViewModel) }
+        bottomBar = { ParteAbajo(appViewModel, cambio) }
     ) {
         Column (
             Modifier
@@ -85,6 +87,9 @@ fun GameBodyContent(navController: NavController, appViewModel: AppViewModel){
                     textoIngresado.toInt(),
                     appViewModel
                 )
+                if (!comprobacionIncorrecta){
+                    cambio = !cambio
+                }
             }) {
                 Text(stringResource(id = R.string.adivinar))
             }
@@ -93,7 +98,9 @@ fun GameBodyContent(navController: NavController, appViewModel: AppViewModel){
                 onConfirm = { comprobacionIncorrecta = false },
                 appViewModel.nivel+4
             )
+
         }
+
     }
 }
 
@@ -136,23 +143,34 @@ fun ParteArriba(appViewModel: AppViewModel){
     }
 }
 @Composable
-fun ParteAbajo(appViewModel: AppViewModel) {
+fun ParteAbajo(appViewModel: AppViewModel, cambio: Boolean) {
     //TODO NO ACTUALIZA
+
     Column(
         Modifier
-            .padding(16.dp)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = stringResource(id = R.string.intentosAnteriores))
         Divider()
-        LazyColumn {
-            items(appViewModel.listaIntentos) { intento ->
-                Text(text = stringResource(id = R.string.intentoX, intento[0], intento[1], intento[2]))
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom,
+            modifier = Modifier.wrapContentSize()
+        ) {
+            items(appViewModel.listaIntentos) {
+                Column (
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.wrapContentSize()
+                ){
+                    Text(
+                        text = stringResource(id = R.string.intentoX, it[0], it[1], it[2])
+                    )
+                }
             }
         }
     }
 }
-
 
