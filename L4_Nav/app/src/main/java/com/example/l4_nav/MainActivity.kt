@@ -1,41 +1,35 @@
 package com.example.l4_nav
 
-import android.app.AlertDialog
-import android.content.Intent
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import com.example.l4_nav.navigation.AppScreens
 import com.example.l4_nav.navigation.MyAppNavigation
 import com.example.l4_nav.ui.theme.L4_NavTheme
-import com.example.l4_nav.screens.PantallaPrincipal
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
 class MainActivity : ComponentActivity() {
     val appViewModel by viewModels<AppViewModel>()
+    companion object{
+        const val CHANNEL_ID = "mi_canal"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        createNotificationChannel()
         setContent {
             L4_NavTheme {
                 // A surface container using the 'background' color from the theme
@@ -43,17 +37,41 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.primary
                 ) {
+                    NotificationPermission()
                     MyAppNavigation(appViewModel = appViewModel)
+
                 }
             }
         }
     }
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is not in the Support Library.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                getString(R.string.channel_name),
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = getString(R.string.channel_description)
+            }
+
+            // Register the channel with the system.
+            val notificationManager: NotificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 }
 
-@Preview(showBackground = true)
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun AppPreview() {
-    L4_NavTheme {
-        MyAppNavigation(appViewModel = AppViewModel())
+fun NotificationPermission(){
+    val permissionState = rememberPermissionState(
+        permission = android.Manifest.permission.POST_NOTIFICATIONS)
+    LaunchedEffect(true){
+        permissionState.launchPermissionRequest()
     }
+
 }

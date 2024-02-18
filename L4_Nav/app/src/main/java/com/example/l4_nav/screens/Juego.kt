@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
@@ -107,17 +110,35 @@ fun GameBodyContent(navController: NavController, appViewModel: AppViewModel){
             }) {
                 Text(stringResource(id = R.string.adivinar))
             }
-            if(appViewModel.perdedor){
+            if(appViewModel.fallo){
                 var ultimo = appViewModel.ultimoIntento
-                ToastMessage(message = stringResource(id = R.string.perdedor, ultimo[1], ultimo[2]))
-                navController.navigateUp()
+                ToastMessage(message = stringResource(id = R.string.fallo, ultimo[1], ultimo[2]))
             }
-
+            if(appViewModel.ganador){
+                appViewModel.enviarNotificacionGanador(
+                    LocalContext.current,
+                    stringResource(id = R.string.ganador),
+                    stringResource(id = R.string.descripcionGanador)
+                )
+            }else if(appViewModel.intentos == 0){
+                Perdedor(onConfirm = { navController.navigateUp() } )
+            }
             MensajeIncorrecto(
                 show = comprobacionIncorrecta,
                 onConfirm = { comprobacionIncorrecta = false },
                 appViewModel.nivel+4
             )
+//            val context = LocalContext.current
+//            val ganador =stringResource(id = R.string.ganador)
+//            val desk = stringResource(id = R.string.descripcionGanador)
+//            Button(onClick = { appViewModel.enviarNotificacionGanador(
+//                context,
+//                ganador,
+//                desk)
+//
+//            }) {
+//                Text(text = "dale")
+//            }
 
         }
 
@@ -150,8 +171,7 @@ fun ParteArriba(appViewModel: AppViewModel){
 @Composable
 fun ParteAbajo(appViewModel: AppViewModel, cambio: Boolean) {
     Column(
-        Modifier
-            .padding(16.dp),
+        Modifier.height(150.dp),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -159,8 +179,10 @@ fun ParteAbajo(appViewModel: AppViewModel, cambio: Boolean) {
         Divider()
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Bottom,
-            modifier = Modifier.wrapContentSize()
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .height(120.dp)
         ) {
             items(appViewModel.listaIntentos) {
                 Column (
@@ -193,6 +215,18 @@ fun MensajeIncorrecto(show: Boolean, onConfirm: () ->Unit, cantidad: Int){
     }
 }
 
+@Composable
+fun Perdedor(onConfirm: () -> Unit){
+    AlertDialog(
+        onDismissRequest = {},
+        confirmButton = { TextButton(onClick = { onConfirm() }) {
+            Text(text = stringResource(id = R.string.volver))
+        }
+        },
+        title = {Text(text = stringResource(id = R.string.finDelJuego))},
+        text = { Text(text = stringResource(id = R.string.perdedor)) },
+    )
+}
 
 @Composable
 fun ToastMessage(message: String) {

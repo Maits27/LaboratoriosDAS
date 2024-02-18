@@ -52,6 +52,7 @@ android {
 dependencies {
 
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.7")
+    implementation("com.google.accompanist:accompanist-permissions:0.35.0-alpha")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
