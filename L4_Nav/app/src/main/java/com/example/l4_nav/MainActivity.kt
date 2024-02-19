@@ -1,8 +1,11 @@
 package com.example.l4_nav
 
+import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -24,12 +27,17 @@ import com.google.accompanist.permissions.rememberPermissionState
 
 class MainActivity : ComponentActivity() {
     val appViewModel by viewModels<AppViewModel>()
+    private val requestCodeCerrarApp = 1
+
     companion object{
         const val CHANNEL_ID = "mi_canal"
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createNotificationChannel()
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
+        notificationManager?.cancel(1)
+
         setContent {
             L4_NavTheme {
                 // A surface container using the 'background' color from the theme
@@ -44,6 +52,8 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+
     private fun createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is not in the Support Library.

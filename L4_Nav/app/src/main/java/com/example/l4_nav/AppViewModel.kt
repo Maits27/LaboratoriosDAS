@@ -55,6 +55,7 @@ class AppViewModel : ViewModel() {
                 ejNum = ejNum + i.toString()
             }
             changeName(numero.toString())
+            Log.d("EL NUMERO ES", numero.toString())
         }
     }
     private fun generarNumeroAleatorio(x: Int) {
@@ -80,25 +81,21 @@ class AppViewModel : ViewModel() {
     fun enviarNotificacionGanador(
         context: Context,
         titulo: String,
+        opcion1:String,
+        opcion2: String,
         description: String
     ){
         val notificationManager = context.getSystemService(NotificationManager::class.java)
-//        val abrirOtraParteIntent = Intent(context, MainActivity::class.java)
-//        val abrirOtraPartePendingIntent = PendingIntent.getActivity(
-//            context,
-//            0,
-//            abrirOtraParteIntent,
-//            PendingIntent.FLAG_UPDATE_CURRENT
-//        )
-//
-//        // Intent para cerrar la app
-//        val cerrarAppIntent = Intent(context, CerrarAppReceiver::class.java)
-//        val cerrarAppPendingIntent = PendingIntent.getBroadcast(
-//            context,
-//            0,
-//            cerrarAppIntent,
-//            PendingIntent.FLAG_UPDATE_CURRENT
-//        )
+        val requestCodeCerrarApp = 1
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val reiniciarIntent: PendingIntent = PendingIntent.getActivity(context, requestCodeCerrarApp, intent, PendingIntent.FLAG_IMMUTABLE)
+
+        val intent2 = Intent(context, CerrarAppReceiver::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val cerrarAppIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent2, PendingIntent.FLAG_IMMUTABLE)
 
         var notification = NotificationCompat.Builder(context, MainActivity.CHANNEL_ID)
             .setContentTitle(titulo)
@@ -109,11 +106,11 @@ class AppViewModel : ViewModel() {
                 .bigText(description))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             // Agregar acciones (botones)
-//            .addAction(R.drawable.ic_abrir_otra_parte, "Abrir Otra Parte", abrirOtraPartePendingIntent)
-//            .addAction(R.drawable.ic_cerrar_app, "Cerrar App", cerrarAppPendingIntent)
+            .addAction(R.drawable.ic_abrir_otra_parte, opcion1, reiniciarIntent)
+            .addAction(R.drawable.ic_cerrar_app, opcion2, cerrarAppIntent)
             .build()
 
-        notificationManager.notify(state.name.hashCode(), notification)
+        notificationManager.notify(1, notification)
     }
     fun comprobarNumero(numeroInsertado: Int): Boolean{
         fallo = false
@@ -125,7 +122,15 @@ class AppViewModel : ViewModel() {
             numerosQueHay.add(n.toString())
         }
 
+//        val numerosQueHay = mutableMapOf<Int, String>()
+//        val mapDigitosIngresados = mutableMapOf<String, Int>()
+//
+//        for (i in 1 .. numero.toString().length){
+//            numerosQueHay[i] = numero.toString()[i].toString()
+//        }
+
         val numeroS = numeroInsertado.toString()
+        val posicionesMuertas = mutableListOf<Int>()
 
         if (numeroS.length!=4+nivel){
             return true
@@ -137,9 +142,14 @@ class AppViewModel : ViewModel() {
                 for (i in 0..3+nivel){
                     if (numeroS[i].toString() == numerosQueHay[i]){
                         muertos++
+                        posicionesMuertas.add(i)
                     }else{
-                        if (numeroS[i].toString() in numerosQueHay){
-                            heridos++
+                        for (j in 0..3+nivel){
+                            if (numeroS[i].toString() == numerosQueHay[j]){
+                                if(j !in posicionesMuertas){
+                                    heridos++
+                                }
+                            }
                         }
                     }
                 }

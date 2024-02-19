@@ -118,6 +118,8 @@ fun GameBodyContent(navController: NavController, appViewModel: AppViewModel){
                 appViewModel.enviarNotificacionGanador(
                     LocalContext.current,
                     stringResource(id = R.string.ganador),
+                    stringResource(id = R.string.jugar),
+                    stringResource(id = R.string.done),
                     stringResource(id = R.string.descripcionGanador)
                 )
             }else if(appViewModel.intentos == 0){
@@ -128,17 +130,9 @@ fun GameBodyContent(navController: NavController, appViewModel: AppViewModel){
                 onConfirm = { comprobacionIncorrecta = false },
                 appViewModel.nivel+4
             )
-//            val context = LocalContext.current
-//            val ganador =stringResource(id = R.string.ganador)
-//            val desk = stringResource(id = R.string.descripcionGanador)
-//            Button(onClick = { appViewModel.enviarNotificacionGanador(
-//                context,
-//                ganador,
-//                desk)
-//
-//            }) {
-//                Text(text = "dale")
-//            }
+            val context = LocalContext.current
+            val ganador =stringResource(id = R.string.ganador)
+            val desk = stringResource(id = R.string.descripcionGanador)
 
         }
 
